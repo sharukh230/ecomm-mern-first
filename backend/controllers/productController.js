@@ -164,12 +164,12 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 
 // Create New Review or Update the review
 exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
-  const { rating, comment, productId } = req.body;
+  const { ratings, comment, productId } = req.body;
 
   const review = {
     user: req.user._id,
     name: req.user.name,
-    rating: Number(rating),
+    ratings: Number(ratings),
     comment,
   };
 
@@ -182,7 +182,7 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
   if (isReviewed) {
     product.reviews.forEach((rev) => {
       if (rev.user.toString() === req.user._id.toString())
-        (rev.rating = rating), (rev.comment = comment);
+        (rev.ratings = ratings), (rev.comment = comment);
     });
   } else {
     product.reviews.push(review);
@@ -192,7 +192,7 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
   let avg = 0;
 
   product.reviews.forEach((rev) => {
-    avg += rev.rating;
+    avg += rev.ratings;
   });
 
   product.ratings = avg / product.reviews.length;
